@@ -1,4 +1,4 @@
-import sequelize from "../../../config/DataBase.js";
+import sequelize from "../../../config/dataBase.js";
 import { DataTypes } from "sequelize";
 
 export const MesaModel = sequelize.define(
@@ -25,7 +25,7 @@ export const MesaModel = sequelize.define(
             },
             references: {
                 model: "usuarios",
-                key: id
+                key: "id"
             }
         }
     },

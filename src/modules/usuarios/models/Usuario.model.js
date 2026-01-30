@@ -1,77 +1,94 @@
-import sequelize from "../../../config/DataBase.js";
+import sequelize from "../../../config/database.js";
 import { DataTypes } from "sequelize";
 
 export const UsuarioModel = sequelize.define(
-  "Usuario",
-  {
-    id: {
-      type: DataTypes.UUID,
-      primaryKey: true,
-      defaultValue: DataTypes.UUIDV4,
-      validate: {
-        isUUID: {
-          args: 4,
-          msg: "O id deve ser um UUID válido.",
+    'UsuarioModel',
+    {
+        id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4,
         },
-      },
-    },
-    nome: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        len: {
-          args: [5, 100],
-          msg: "O nome deve ter entre 5 e 100 caracteres.",
+        nome: {
+            type: DataTypes.STRING(150),
+            allowNull: false,
+            validate: {
+                notEmpty: {
+                    msg: "O nome não pode estar vazio"
+                },
+                len: {
+                    args: [1, 150],
+                    msg: "O nome deve ter entre 1 e 150 caracteres"
+                },
+            },
         },
-        notEmpty: {
-          msg: "O campo de nome não pode ser vazio.",
+        matricula: {
+            type: DataTypes.CHAR(5),
+            unique: {
+                msg: "Esta matrícula já está registrada"
+            },
+            allowNull: false,
+            validate: {
+                notEmpty: {
+                    msg: "A matrícula não pode estar vazia"
+                },
+                len: {
+                    args: [5, 5],
+                    msg: "A matrícula deve ter exatamente 5 caracteres"
+                },
+            },
         },
-      },
-    },
-    matricula: {
-      type: DataTypes.STRING(5),
-      allowNull: false,
-      validate: {
-        is: {
-          args: /^[A-Za-z]\d{4}$/,
-          msg: "Matrícula inválida. Deve começar com uma letra (A–Z) seguida por 4 dígitos, ex.: A1234.",
+        telefone: {
+            type: DataTypes.CHAR(11),
+            allowNull: true,
+            validate: {
+                isNumeric: {
+                    msg: "O telefone deve conter apenas números"
+                },
+                len: {
+                    args: [11, 11],
+                    msg: "O telefone deve ter exatamente 11 dígitos"
+                },
+            },
         },
-      },
-    },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-      validate: {
-        isEmail: {
-          msg: "O email deve ser um endereço de email válido.",
+        senha: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+            validate: {
+                notEmpty: {
+                    msg: "A senha não pode estar vazia"
+                },
+            },
         },
-      },
-    },
-    senha: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-      validate: {
-        is: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%?])[A-Za-z\d@#$%?]{8}$/,
-        msg: "A senha deve ter exatamente 8 caracteres e incluir pelo menos 1 letra maiúscula, 1 letra minúscula, 1 dígito e 1 dos caracteres especiais @ # $ % ?; não são permitidos outros caracteres.",
-      },
-    },
-    perfil: {
-      type: DataTypes.ENUM("admin", "client"),
-      allowNull: false,
-      validate: {
-        isIn: {
-          args: [["admin", "cliente"]],
-          msg: "Perfil invalido",
+        email: {
+            type: DataTypes.STRING(100),
+            allowNull: false,
+            validate: {
+                notEmpty: {
+                    msg: "O email não pode estar vazio"
+                },
+                isEmail: {
+                    msg: "Formato de email inválido"
+                },
+            },
         },
-      },
+        perfil: {
+            type: DataTypes.ENUM('admin', 'cliente'),
+            allowNull: true,
+            validate: {
+                isIn: {
+                    args: [['admin', 'cliente']],
+                    msg: "O perfil deve ser 'admin' ou 'cliente'"
+                },
+            },
+        },
     },
-  },
-  {
-    tableName: "usuarios",
-    createdAt: "criado_em",
-    updatedAt: "atualizado_em",
-    deletedAt: "excluido_em",
-    paranoid: true
-  },
+    {
+        tableName: "usuario",
+        // timestamps 
+        createdAt: "criado_em",
+        updatedAt: "atualizado_em",
+        deletedAt: "excluido_em",
+        paranoid: true,
+    }
 );

@@ -1,4 +1,4 @@
-import sequelize from "../../../config/DataBase";
+import sequelize from "../../../config/dataBase.js";
 import { DataTypes } from "sequelize";
 
 export const CardapioModel = sequelize.define(
@@ -25,7 +25,7 @@ export const CardapioModel = sequelize.define(
         },
         references: {
           model: "usuarios",
-          key: id
+          key: "id"
         }
       }
     },
